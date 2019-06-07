@@ -1,24 +1,19 @@
 import React, { Component } from 'react'
-import { Route, Link } from 'react-router-dom'
-import Form from '../Form/Form'
+import { Link } from 'react-router-dom'
 
 export default class Product extends Component {
-    // constructor(props) {
-    //     super(props)
-    // }
 
     render() {
             let { name, price, img, id} = this.props.product
         return (
-            <div>
+            <div className="product">
                 <h1>Name: {name}</h1>
                 <h2>Price: {price}</h2>
                 <img src={img} height="200" width="200" alt="" />
-                <button onClick={this.props.handleDelete}>delete</button>
+                <button onClick={this.props.handleDelete} style={{width: '200px'}}>delete</button>
                 <Link to={`/add/${id}`}>
-                    <button>Edit</button>
+                    <button style={{width: '200px'}}>Edit</button>
                 </Link>
-                {/* <button onClick={() => this.props.getCurrentProduct(this.props.product)}>Edit</button> */}
             </div>
         )
     }

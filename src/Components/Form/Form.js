@@ -7,6 +7,7 @@ export default class Form extends Component {
         super(props)
         
         this.state = {
+            product: [],
             imageUrl: '',
             name: '',
             price: '',
@@ -15,9 +16,11 @@ export default class Form extends Component {
     }
 
     componentDidMount() {
-        axios.get(`/api/inventory/${this.props.match.params.id}`)
-        .then(res => {console.log(res)})
-        .catch(err => console.log(err))
+        if (this.props.match.params.id) {
+            axios.get(`/api/inventory/${this.props.match.params.id}`)
+            .then(res => this.setState ({ product: res.data }))
+            .catch(err => console.log(err))
+        }
     }
 
 
@@ -68,8 +71,9 @@ export default class Form extends Component {
     
     render() {
         return (
-            <div>
+            <div className="form">
                 <img src={this.state.imageUrl} alt="" height="200" width="200" />
+                <h2>Image URL: </h2>
                 <input 
                     placeholder="image URL"
                     onChange={this.handleChange}
@@ -77,6 +81,7 @@ export default class Form extends Component {
                     value={this.state.imageUrl}
                     type="text"    
                 />
+                <h2>Product Name: </h2>
                 <input 
                     placeholder="Product Name"
                     onChange={this.handleChange}
@@ -84,6 +89,7 @@ export default class Form extends Component {
                     value={this.state.name}
                     type="text"    
                 />
+                <h2>Price: </h2>
                 <input 
                     placeholder="Price"
                     onChange={this.handleChange}

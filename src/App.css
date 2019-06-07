@@ -25,3 +25,24 @@
   align-items: center;
 }
 
+.product {
+  background: #D34735;
+  margin: 25px;
+  display: flex;
+  flex-direction: column;
+  width: 40vw;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+}
+
+.form {
+  display: flex; 
+  flex-direction: column;
+  background: green;
+  justify-content: center;
+  align-items: center;
+  height: 45wh;
+  width: 45vw;
+}
+
