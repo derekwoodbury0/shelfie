@@ -1,22 +1,51 @@
 import React, { Component } from 'react'
 import axios from 'axios';
+import { Link } from 'react-router-dom'
 
 export default class Form extends Component {
     constructor(props) {
         super(props)
-
+        
         this.state = {
             imageUrl: '',
             name: '',
             price: '',
+            edit: false
         }
+    }
+
+    componentDidMount() {
+        axios.get(`/api/inventory/${this.props.match.params.id}`)
+        .then(res => {console.log(res)})
+        .catch(err => console.log(err))
+    }
+
+
+    
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.currentProduct !== this.props.currentProduct) {
+
+            this.setState ({ imageUrl: this.props.currentProduct.img,
+                name: this.props.currentProduct.name,
+                price: this.props.currentProduct.price
+            })
+            this.toggleEdit()
+        }
+    }
+
+    updateProduct = () => {
+        let updatedProduct = {name: this.state.name, price: this.state.price, imageUrl: this.state.imageUrl}
+        axios.put(`/api/inventory/${this.props.currentProduct.id}`, updatedProduct)
+        .then(() => this.props.componentDidMount())
+
+        this.toggleEdit()
+        this.setState ({ name: '', imageUrl: '', price: ''})
     }
 
     handleChange = e => {
         let { value, name } = e.target
 
         this.setState ({[name]: value})
-        console.log(this.state)
     }
 
     cancelButton = () => {
@@ -30,14 +59,17 @@ export default class Form extends Component {
     handleClick = () => {
         let newAnimal = this.state
         axios.post('/api/product', newAnimal).then( res => {
-            this.props.componentDidMount()
             this.setState({ name: '', imageUrl: '', price: ''})
         })
     }
+
+    toggleEdit = () => this.setState ({ edit: !this.state.edit})
+
     
     render() {
         return (
             <div>
+                <img src={this.state.imageUrl} alt="" height="200" width="200" />
                 <input 
                     placeholder="image URL"
                     onChange={this.handleChange}
@@ -59,8 +91,18 @@ export default class Form extends Component {
                     value={this.state.price}
                     type="number"    
                 />
-                <button onClick={this.cancelButton}>Cancel</button>
-                <button onClick={this.handleClick}>Add To Inventory</button>
+                <Link to="/">
+                    <button onClick={this.cancelButton}>Cancel</button>
+                </Link>
+                {this.state.edit ?
+                    <Link to="/">
+                        <button onClick={this.updateProduct}>Save Changes</button>
+                    </Link>
+                    :
+                    <Link to="/">
+                        <button onClick={this.handleClick}>Add To Inventory</button>
+                    </Link>
+                }
             </div>
         )
     }
